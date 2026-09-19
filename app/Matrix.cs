@@ -58,6 +58,7 @@ namespace GHelper
             checkTextRunning.Text = Properties.Strings.MatrixRunningText;
             checkClockBattery.Text = Properties.Strings.SlashBatteryLevel;
             checkFlip.Text = Properties.Strings.MatrixFlip;
+            checkFlipLid.Text = Properties.Strings.MatrixFlipLid;
             checkAutoOff.Text = Properties.Strings.TurnOffOnBattery;
             checkLidOff.Text = Properties.Strings.DisableOnLidClose;
 
@@ -141,6 +142,9 @@ namespace GHelper
 
             checkFlip.Checked = AppConfig.Is("matrix_flip");
             checkFlip.CheckedChanged += CheckFlip_CheckedChanged;
+
+            checkFlipLid.Checked = AppConfig.Is("matrix_flip_lid");
+            checkFlipLid.CheckedChanged += CheckFlipLid_CheckedChanged;
 
             checkAutoOff.Checked = AppConfig.Is("matrix_auto");
             checkAutoOff.CheckedChanged += CheckAutoOff_CheckedChanged;
@@ -537,6 +541,12 @@ namespace GHelper
         private void CheckFlip_CheckedChanged(object? sender, EventArgs e)
         {
             AppConfig.Set("matrix_flip", checkFlip.Checked ? 1 : 0);
+            matrixControl.deviceMatrix.PresentClock();
+        }
+
+        private void CheckFlipLid_CheckedChanged(object? sender, EventArgs e)
+        {
+            AppConfig.Set("matrix_flip_lid", checkFlipLid.Checked ? 1 : 0);
             matrixControl.deviceMatrix.PresentClock();
         }
 

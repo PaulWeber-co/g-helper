@@ -527,7 +527,7 @@ namespace GHelper.AnimeMatrix
 
         private static void FlipText(params List<(int x, int y, byte v)>[] lines)
         {
-            if (!AppConfig.Is("matrix_flip")) return;
+            if (!AniMatrixControl.IsFlipped) return;
 
             var all = lines.SelectMany(l => l);
             if (!all.Any()) return;
@@ -591,7 +591,7 @@ namespace GHelper.AnimeMatrix
                 AddFrame();
             }
 
-            if (AppConfig.Is("matrix_flip")) frames.Reverse();
+            if (AniMatrixControl.IsFlipped) frames.Reverse();
 
             // keep scroll phase
             frameIndex = index % frames.Count;
@@ -788,7 +788,15 @@ namespace GHelper.AnimeMatrix
             }
         }
 
-        public void GenerateFrame(Image image, float zoom = 100, int panX = 0, int panY = 0, InterpolationMode quality = InterpolationMode.Default, int contrast = 100, int gamma = 0)
+        // rotate what gets drawn next by 180 degrees, keeping it in the same spot
+        private static void RotateAround(Graphics graph, float centerX, float centerY)
+        {
+            graph.TranslateTransform(centerX, centerY);
+            graph.RotateTransform(180);
+            graph.TranslateTransform(-centerX, -centerY);
+        }
+
+        public void GenerateFrame(Image image, float zoom = 100, int panX = 0, int panY = 0, InterpolationMode quality = InterpolationMode.Default, int contrast = 100, int gamma = 0, bool flip = false)
         {
             int width = MaxColumns / 2 * 6;
             int height = MaxRows;
@@ -810,7 +818,12 @@ namespace GHelper.AnimeMatrix
                     graph.CompositingQuality = CompositingQuality.HighQuality;
                     graph.SmoothingMode = SmoothingMode.AntiAlias;
 
-                    graph.DrawImage(image, (float)Math.Round(targetWidth - (scaleWidth + panX) * targetWidth / width), -panY, (float)Math.Round(scaleWidth * targetWidth / width), scaleHeight);
+                    var drawWidth = (float)Math.Round(scaleWidth * targetWidth / width);
+                    var drawX = (float)Math.Round(targetWidth - (scaleWidth + panX) * targetWidth / width);
+                    float drawY = -panY;
+
+                    if (flip) RotateAround(graph, drawX + drawWidth / 2, drawY + scaleHeight / 2);
+                    graph.DrawImage(image, drawX, drawY, drawWidth, scaleHeight);
 
                 }
 
@@ -819,7 +832,7 @@ namespace GHelper.AnimeMatrix
             }
         }
 
-        public void GenerateFrameDiagonal(Image image, float zoom = 100, int panX = 0, int panY = 0, InterpolationMode quality = InterpolationMode.Default, int contrast = 100, int gamma = 0)
+        public void GenerateFrameDiagonal(Image image, float zoom = 100, int panX = 0, int panY = 0, InterpolationMode quality = InterpolationMode.Default, int contrast = 100, int gamma = 0, bool flip = false)
         {
             int width = MaxRows + FullRows;
             int height = MaxColumns + FullRows;
@@ -841,7 +854,11 @@ namespace GHelper.AnimeMatrix
                     graph.CompositingQuality = CompositingQuality.HighQuality;
                     graph.SmoothingMode = SmoothingMode.AntiAlias;
 
-                    graph.DrawImage(image, (width - scaleWidth) / 2, height - scaleHeight, scaleWidth, scaleHeight);
+                    var drawX = (width - scaleWidth) / 2;
+                    var drawY = height - scaleHeight;
+
+                    if (flip) RotateAround(graph, drawX + scaleWidth / 2, drawY + scaleHeight / 2);
+                    graph.DrawImage(image, drawX, drawY, scaleWidth, scaleHeight);
 
                 }
 

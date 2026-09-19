@@ -1674,6 +1674,15 @@ namespace GHelper.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Rotate on lid close.
+        /// </summary>
+        internal static string MatrixFlipLid {
+            get {
+                return ResourceManager.GetString("MatrixFlipLid", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Max refresh rate for lower latency.
         /// </summary>
         internal static string MaxRefreshTooltip {

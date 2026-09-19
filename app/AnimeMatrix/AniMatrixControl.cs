@@ -37,6 +37,9 @@ namespace GHelper.AnimeMatrix
             || (AppConfig.Is("matrix_auto") && SystemInformation.PowerStatus.PowerLineStatus != PowerLineStatus.Online)
             || (AppConfig.Is("matrix_lid") && lidClose);
 
+        // the panel sits on the lid, so closing it turns the picture upside down
+        public static bool IsFlipped => AppConfig.Is("matrix_flip") ^ (AppConfig.Is("matrix_flip_lid") && lidClose);
+
         public static MatrixMode Mode => (MatrixMode)AppConfig.Get("matrix_running", 0);
 
         private long lastPresent;
@@ -164,7 +167,7 @@ namespace GHelper.AnimeMatrix
 
         public void SetLidMode(bool force = false)
         {
-            if (deviceMatrix is not null && (AppConfig.Is("matrix_lid") || force))
+            if (deviceMatrix is not null && (AppConfig.Is("matrix_lid") || AppConfig.Is("matrix_flip_lid") || force))
             {
                 Logger.WriteLine($"Matrix LidClosed: {lidClose}");
                 SetDevice(true);
@@ -558,9 +561,9 @@ namespace GHelper.AnimeMatrix
             InterpolationMode quality = (InterpolationMode)AppConfig.Get("matrix_quality", 0);
 
             if ((MatrixRotation)AppConfig.Get("matrix_rotation", 0) == MatrixRotation.Planar)
-                deviceMatrix.GenerateFrame(image, zoom, x, y, quality, contrast, gamma);
+                deviceMatrix.GenerateFrame(image, zoom, x, y, quality, contrast, gamma, IsFlipped);
             else
-                deviceMatrix.GenerateFrameDiagonal(image, zoom, x, y, quality, contrast, gamma);
+                deviceMatrix.GenerateFrameDiagonal(image, zoom, x, y, quality, contrast, gamma, IsFlipped);
         }
 
         public static int PictureFrameDelay(Image image)

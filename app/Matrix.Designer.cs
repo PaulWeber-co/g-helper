@@ -85,6 +85,7 @@ namespace GHelper
             panelClockBattery = new Panel();
             checkClockBattery = new CheckBox();
             checkFlip = new CheckBox();
+            checkFlipLid = new CheckBox();
             panelAudioSettings = new Panel();
             comboAudioMode = new UI.RComboBox();
             labelAudioMode = new Label();
@@ -555,6 +556,7 @@ namespace GHelper
             //
             // panelClockBattery
             //
+            panelClockBattery.Controls.Add(checkFlipLid);
             panelClockBattery.Controls.Add(checkFlip);
             panelClockBattery.Controls.Add(checkClockBattery);
             panelClockBattery.Dock = DockStyle.Top;
@@ -584,6 +586,17 @@ namespace GHelper
             checkFlip.TabIndex = 19;
             checkFlip.Text = "Rotate 180°";
             checkFlip.UseVisualStyleBackColor = true;
+            //
+            // checkFlipLid
+            //
+            checkFlipLid.AutoSize = true;
+            checkFlipLid.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            checkFlipLid.Location = new Point(542, 10);
+            checkFlipLid.Name = "checkFlipLid";
+            checkFlipLid.Size = new Size(180, 36);
+            checkFlipLid.TabIndex = 20;
+            checkFlipLid.Text = "Rotate on lid close";
+            checkFlipLid.UseVisualStyleBackColor = true;
             //
             // panelAudioSettings
             //
@@ -965,6 +978,7 @@ namespace GHelper
         private Panel panelClockBattery;
         private CheckBox checkClockBattery;
         private CheckBox checkFlip;
+        private CheckBox checkFlipLid;
         private Panel panelAudioSettings;
         private UI.RComboBox comboAudioMode;
         private Label labelAudioMode;

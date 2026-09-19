@@ -608,6 +608,9 @@ Do you still want to continue?</value>
   <data name="MatrixFlip" xml:space="preserve">
     <value>Rotate 180°</value>
   </data>
+  <data name="MatrixFlipLid" xml:space="preserve">
+    <value>Rotate on lid close</value>
+  </data>
   <data name="MaxRefreshTooltip" xml:space="preserve">
     <value>Max refresh rate for lower latency</value>
   </data>
